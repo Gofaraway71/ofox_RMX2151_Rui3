@@ -21,7 +21,7 @@ env:
   device: RMX2151
   DT_url: https://github.com/Gofaraway71/ofox_RMX2151_Rui3 -b main
   DT_path: device/realme/RMX2151
-  ProductFileHeader: omni
+  ProductFileHeader: twrp
   target: recoveryimage
   WorkSpace: WorkSpace
   TZ: Asia/Shanghai
