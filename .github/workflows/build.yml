@@ -21,7 +21,7 @@ env:
   device: RMX2151
   DT_url: https://github.com/Gofaraway71/ofox_RMX2151_Rui3 -b main
   DT_path: device/realme/RMX2151
-  ProductFileHeader: twrp
+  ProductFileHeader: omni
   target: recoveryimage
   WorkSpace: WorkSpace
   TZ: Asia/Shanghai
@@ -41,7 +41,7 @@ jobs:
           echo "::group::Install Build Env Tool"
           sudo -E apt-get clean
           sudo -E apt-get -qq update
-          sudo -E apt-get -qq install curl libstdc++6 git wget repo rsync aria2
+          sudo -E apt-get -qq install curl libstdc++6 git wget rsync aria2
           echo "::endgroup::"
           git config --global user.name "${{github.actor}}"
           git config --global user.email "1844766234@qq.com"
@@ -158,6 +158,23 @@ jobs:
           body: |
             ${{env.Rec_name}}-${{env.Rec_ver}} for ${{env.device}} build at ${{steps.info.outputs.date}}
             Actions:[${{github.run_id}}](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}})
+            Download:[${{env.Rec_name}}_for_${{env.device}}_by_${{env.Author}}_${{github.run_id}}.zip](https://download.fastgit.org/${{github.repository}}/releases/download/${{env.device}}-${{env.Rec_name}}-${{steps.info.outputs.date}}/${{env.Rec_name}}_for_${{env.device}}_by_${{env.Author}}_${{github.run_id}}.zip)
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.1.0
+        if: (github.event.inputs.Delete_oldReleases == 'true' && github.event.inputs.Delete_oldReleases  != 'false') || contains(github.event.action, 'Delete_oldReleases')
+        with:
+          keep_latest: 12
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          keep_minimum_runs: 10
             Download:[${{env.Rec_name}}_for_${{env.device}}_by_${{env.Author}}_${{github.run_id}}.zip](https://download.fastgit.org/${{github.repository}}/releases/download/${{env.device}}-${{env.Rec_name}}-${{steps.info.outputs.date}}/${{env.Rec_name}}_for_${{env.device}}_by_${{env.Author}}_${{github.run_id}}.zip)
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
